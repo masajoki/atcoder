@@ -1,39 +1,22 @@
-a,b=map(int,input().split())
-x,y=map(int,input().split())
+#これどこでも3手以内で行ける
+r1,h1=map(int,input().split())
+r2,h2=map(int,input().split())
+x=abs(r2-r1)
+y=abs(h2-h1)
 
-if a==x and b==y:
+if x==0 and y==0:
     print(0)
-    exit()
-
-chikaku=abs(a-x)+abs(b-y)
-if chikaku <=3:
+elif x==y:
     print(1)
-    exit()
-
-if b!=y:
-    naname=abs((a-x)/(b-y))
-    if naname==1:
-        print(1)
-        exit()
-
-uppper=0
-lower=0
-if a!=x:
-    uppper=abs((b+3-y)/(a-x))
-    lower=abs((b-3-y)/a-x)
-else:
-    uppper=abs((a+3-x)/(b-y))
-    lower=abs((a-3-x)/(b-y))
- 
-if max(uppper,lower) >=1 and min(uppper,lower) <= 1:
+elif (x+y)<=3:
+    print(1)
+elif (x+y)%2==0:
+    print(2)
+elif (x+y)<=6: #マンハッタン距離が6以内（たてよこいどう）
     print(2)
 else:
-    print(3)
-
-
-
-
-
-
-
-
+    dif=abs(x-y)
+    if dif <=3:
+        print(2)
+    else:
+        print(3)
