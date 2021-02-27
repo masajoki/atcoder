@@ -22,3 +22,4 @@ for i in range(A,101):
                 ans+=dp[i][j][k]
 
 print(ans)
+
