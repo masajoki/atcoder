@@ -1,70 +1,36 @@
-import math
+#070 - Plant Planning（★4） 
+#https://atcoder.jp/contests/typical90/tasks/typical90_br
+# 
+# 二次元平面上に N 棟の工場があり
+# これからあなたは二次元平面上の好きな場所を 1 つ選び、発電所を建設します。
+# 発電所の不便さを、発電所から各工場までのマンハッタン距離の総和と定義するとき、
+# #不便さとしてありうる最小の値を求めてください。なお、この問題の制約下で答えは整数となることが証明できます。
+
+# 答え見てAC
+# 中央値が最小となる
+
 N=int(input())
 X=[]
 Y=[]
+
+def calcX(val):
+    distance=0
+    for x in X:
+        distance+=abs(x-val)
+    return distance
+
+def calcY(val):
+    distance=0
+    for y in Y:
+        distance+=abs(y-val)
+    return distance
+
 for i in range(N):
     x,y=map(int,input().split())
     X.append(x)
     Y.append(y)
 
-xdsq=0
-xsum=sum(X)
-xsqsum=sum(list(map(lambda x:x**2,X)))
+X.sort()
+Y.sort()
 
-
-temp1=4*N*N*xsum*xsum-4*N*xsqsum
-if temp1<=0:
-    xans=0
-    exit()
-
-Xlist=[]
-temp=(4*N*N*xsum*xsum-4*N*xsqsum)**0.5
-Xlist.append(math.floor((2*N*xsum+temp)/(2*N)))
-Xlist.append(math.floor((2*N*xsum-temp)/(2*N)))
-Xlist.append(math.ceil((2*N*xsum+temp)/(2*N)))
-Xlist.append(math.ceil((2*N*xsum-temp)/(2*N)))
-
-xsummin=10**10
-xans=-1
-for xt in Xlist:
-    xsum=0
-
-    for i in range(N):
-        xsum+=abs(X[i]-xt)
-    if xsum<xsummin:
-        xans=xt
-
-print(xsummin)
-
-
-
-xdsq=0
-xsum=sum(Y)
-xsqsum=sum(list(map(lambda x:x**2,Y)))
-
-
-temp1=4*N*N*xsum*xsum-4*N*xsqsum
-if temp1<=0:
-    xans=0
-    exit()
-
-Xlist=[]
-temp=(4*N*N*xsum*xsum-4*N*xsqsum)**0.5
-Xlist.append(math.floor((2*N*xsum+temp)/(2*N)))
-Xlist.append(math.floor((2*N*xsum-temp)/(2*N)))
-Xlist.append(math.ceil((2*N*xsum+temp)/(2*N)))
-Xlist.append(math.ceil((2*N*xsum-temp)/(2*N)))
-
-ysummin=10**10
-yans=-1
-for xt in Xlist:
-    ysum=0
-
-    for i in range(N):
-        ysum+=abs(Y[i]-xt)
-    if ysum<ysummin:
-        yans=xt
-
-print(ysummin)
-
-
+print(calcX(X[N//2])+calcY(Y[N//2]))

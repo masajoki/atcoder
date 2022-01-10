@@ -1,0 +1,10 @@
+#abc233_b
+L,R=map(int,input().split())
+S=input()
+left=S[:L-1]
+right=S[R:]
+mid=list(S[L-1:R])
+mid.reverse()
+mids="".join(mid)
+ans=left+mids+right
+print(ans)

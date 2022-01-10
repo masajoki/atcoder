@@ -1,6 +1,5 @@
-#この問題Segment Treeでできるかと思ったけど、
-# Aに含まれる値が重複しているので
-# Aに出現したからといってTreeの値を単位元で更新してはいけない
+#typical90_ak.py
+#典型 037 - Don't Leave the Spice（★5）
 
 class SegmentTree:
     # https://qiita.com/dn6049949/items/afa12d5d079f518de368
@@ -37,27 +36,33 @@ class SegmentTree:
         res = self.f(lres, rres)
         return res
     
-N,M=map(int,input().split())
-A=list(map(int,input().split()))
 
-segtree=SegmentTree(N,min,N) #単位元はN(何に対してもfしてももとに戻る)
+W,N=map(int,input().split())
+L=[]
+R=[]
+V=[]
+
+segtree=SegmentTree((W+1)*(N+1),max,0) #単位元はN(何に対してもfしてももとに戻る)
+dp=[[0 for _ in range(W+1)] for _ in range(N+1)]
 
 for i in range(N):
-    segtree.update(i,i)
+    l,r,v=map(int,input().split())
+    L.append(l)
+    R.append(r)
+    V.append(v)
 
-for i in range(M):
-    segtree.update(A[i],N) #除外するためにNにする
+for i in range(N):
+    for w in range(W+1):
+        left=max((W+1)*i,(W+1)*i+w-R[i])
+        right=max((W+1)*i,(W+1)*i+w-L[i])
+        tempmax=segtree.query(left,right+1)
+        prev=segtree.query(i*(W+1)+w,i*(W+1)+w+1)
+        here=segtree.query((i+1)*(W+1)+w,(i+1)*(W+1)+w+1)
+        updatetemp=max(tempmax+V[i],here,prev)
+        segtree.update((i+1)*(W+1)+w,updatetemp)
 
-ans=N
-for i in range(N-M+1):
-    t=segtree.query(0,N)
-    ans=min(ans,t)
-    segtree.update(A[i],A[i])
-    if i+M<N:
-        segtree.update(A[i+M],N)
-
-print(ans)
-
-
-
-
+ans=segtree.query(N*(W+1)+W,N*(W+1)+W+1)
+if ans==0:
+    print(-1)
+else:
+    print(ans)

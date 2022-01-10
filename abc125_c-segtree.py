@@ -1,7 +1,3 @@
-#この問題Segment Treeでできるかと思ったけど、
-# Aに含まれる値が重複しているので
-# Aに出現したからといってTreeの値を単位元で更新してはいけない
-
 class SegmentTree:
     # https://qiita.com/dn6049949/items/afa12d5d079f518de368
     # 初期化処理
@@ -36,28 +32,23 @@ class SegmentTree:
             r >>= 1
         res = self.f(lres, rres)
         return res
-    
-N,M=map(int,input().split())
+
+def gcd(a,b):
+    if a==0:
+        return b
+    else:
+        return gcd(b%a,a)
+
+N=int(input())
 A=list(map(int,input().split()))
-
-segtree=SegmentTree(N,min,N) #単位元はN(何に対してもfしてももとに戻る)
-
+segtree=SegmentTree(N,gcd)
 for i in range(N):
-    segtree.update(i,i)
-
-for i in range(M):
-    segtree.update(A[i],N) #除外するためにNにする
-
-ans=N
-for i in range(N-M+1):
-    t=segtree.query(0,N)
-    ans=min(ans,t)
-    segtree.update(A[i],A[i])
-    if i+M<N:
-        segtree.update(A[i+M],N)
-
-print(ans)
-
-
-
+    segtree.update(i,A[i]) #セグメント木のiをA[i]で更新
+ans=1
+for i in range(N):
+    left=segtree.query(0,i)
+    right=segtree.query(i+1,N)
+    res=gcd(left,right)
+    ans=max(ans,res)
+print(ans)    
 

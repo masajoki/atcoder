@@ -1,6 +1,6 @@
-#この問題Segment Treeでできるかと思ったけど、
-# Aに含まれる値が重複しているので
-# Aに出現したからといってTreeの値を単位元で更新してはいけない
+#abc157_e.py
+#E - Simple String Queries 
+
 
 class SegmentTree:
     # https://qiita.com/dn6049949/items/afa12d5d079f518de368
@@ -15,6 +15,8 @@ class SegmentTree:
 
     def update(self, i, x):
         i += self.size
+        t=self.dat[i]
+        
         self.dat[i] = x
         while i > 0:
             i >>= 1
@@ -37,27 +39,20 @@ class SegmentTree:
         res = self.f(lres, rres)
         return res
     
-N,M=map(int,input().split())
-A=list(map(int,input().split()))
+N=int(input())
+S=list(input())
+Qn=int(input())
+Q=[]
+for i in range(Qn):
+    a,b,c=input().split()
+    Q.append((int(a),int(b),c))
 
-segtree=SegmentTree(N,min,N) #単位元はN(何に対してもfしてももとに戻る)
+def monoid(a,b):
+    return b.union(a)
 
+
+segtree=SegmentTree(N,monoid,set()) #単位元はN(何に対してもfしてももとに戻る)
 for i in range(N):
-    segtree.update(i,i)
+    segtree.update(i,set(S[i]))
 
-for i in range(M):
-    segtree.update(A[i],N) #除外するためにNにする
-
-ans=N
-for i in range(N-M+1):
-    t=segtree.query(0,N)
-    ans=min(ans,t)
-    segtree.update(A[i],A[i])
-    if i+M<N:
-        segtree.update(A[i+M],N)
-
-print(ans)
-
-
-
-
+pass
