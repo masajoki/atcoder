@@ -1,0 +1,22 @@
+#データの散らばり 1 (平均偏差).py
+from statistics import mean
+N=int(input())
+A=list(map(int,input().split()))
+B=list(map(int,input().split()))
+
+AD=0
+BD=0
+AM=mean(A)
+BM=mean(B)
+for a in A:
+    AD+=abs(AM-a)
+
+for b in B:
+    BD+=abs(BM-b)
+
+if AD==BD:
+    print("same")
+elif AD>BD:
+    print("B")
+else:
+    print("A")

@@ -1,5 +1,6 @@
 #typical90_ak.py
 #典型 037 - Don't Leave the Spice（★5）
+#セグメントツリーを使う。微妙にうまく動いていないみたいだ。
 
 class SegmentTree:
     # https://qiita.com/dn6049949/items/afa12d5d079f518de368
@@ -42,8 +43,9 @@ L=[]
 R=[]
 V=[]
 
-segtree=SegmentTree((W+1)*(N+1),max,0) #単位元はN(何に対してもfしてももとに戻る)
+segtree=SegmentTree(W+1,max,0) #単位元は0(何に対してもfしてももとに戻る)
 dp=[[0 for _ in range(W+1)] for _ in range(N+1)]
+
 
 for i in range(N):
     l,r,v=map(int,input().split())
@@ -51,18 +53,28 @@ for i in range(N):
     R.append(r)
     V.append(v)
 
-for i in range(N):
-    for w in range(W+1):
-        left=max((W+1)*i,(W+1)*i+w-R[i])
-        right=max((W+1)*i,(W+1)*i+w-L[i])
-        tempmax=segtree.query(left,right+1)
-        prev=segtree.query(i*(W+1)+w,i*(W+1)+w+1)
-        here=segtree.query((i+1)*(W+1)+w,(i+1)*(W+1)+w+1)
-        updatetemp=max(tempmax+V[i],here,prev)
-        segtree.update((i+1)*(W+1)+w,updatetemp)
 
-ans=segtree.query(N*(W+1)+W,N*(W+1)+W+1)
-if ans==0:
+
+for w in range(W+1):
+    if L[0]<=w<=R[0]:
+        segtree.update(w,V[0])
+        dp[1][w]=V[0]
+
+for i in range(1,N):
+    for w in range(W+1):
+        left=max(0,w-R[i])
+        right=w-L[i]
+        if right<1:
+            continue
+        tempmax=segtree.query(left,right+1)
+        if L[i]<=w<=R[i] or tempmax!=0:
+            dp[i+1][w]=max(tempmax+V[i],dp[i+1][w])
+        dp[i+1][w]=max(dp[i+1][w],dp[i][w])
+    for w in range(W+1):
+        segtree.update(w,dp[i+1][w])
+
+# print(*dp[N])
+if dp[N][W]==0:
     print(-1)
 else:
-    print(ans)
+    print(dp[N][W])
